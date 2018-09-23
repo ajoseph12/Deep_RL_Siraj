@@ -1,70 +1,18 @@
 """
+Topic -- Grid World simulation using RL
+Video -- https://www.youtube.com/watch?v=aAkFtRxeP7c
+github -- https://github.com/colinskow/move37/tree/master/dynamic_programming
 
-We have a grid
-
-	  0	  1	  2	  3
-	-----------------
-  0	|   |   |   | +1|
-	-----------------
-  1	|   | * |   | -1|
-	-----------------
-  2	|   |   |   |   |
-	-----------------
+Summary
+-------
 
 
-actions = ['L','R','U','D']
-states = 11
-we have the so called obey factor.
-
-Rules:
-- Mario go up/down - 0.8 obey --> 0.1 left & 0.1 right
-- Mario go left/right -0.8 obey --> 0.1 left & 0.1 right
-
-v(s) = r(s,a) + gamma*(sum(P(ss',a) * v(s')))
-
-To simulate grid:
-define grid first:
-define exceptions:
-define reward positions:
-
-grid(i,j) --> i rows and j columns
-
-up = i+1, j
-down = i-1, j
-left = i, j+1
-right = i, j-1
-
-
-def action_value(state, action, p_action = 0.8, p_mistake = 0.1):
-
-	row, column = state
-	
-	if action == 'U':
-		if 
-		left = 
-		right = 
-		expected_reward = p_action*reward[min(row + 1,rows), column] + p_mistake*reward[row, max(column-1,0)] + p_mistake*reward[row, min(column+1, columns)]
-		next_state_value = p_action*state_values[min(row + 1,rows), column] + p_mistake*state_values[row, max(column-1,0)] + p_mistake*state_values[row, min(column+1, columns)]
-		action_value = expected_reward + gamma * next_state_value
-		return action_value
-
-	elif action == 'D':
-		expected_reward = p_action*reward[max(row - 1,0), column] + p_mistake*reward[row, max(column-1,0)] + p_mistake*reward[row, min(column+1, columns)]
-		next_state_value = p_action*state_values[max(row - 1,0), column] + p_mistake*state_values[row, max(column-1,0)] + p_mistake*state_values[row, min(column+1, columns)]
-		action_value = expected_reward + gamma * next_state_value
-		return action_value
-
-	elif action == 'L':
-		expected_reward = p_action*reward[row, max(column-1,0)] + p_mistake*reward[min(row + 1,rows), column] + p_mistake*reward[max(row - 1,0), column]
-		next_state_value = p_action*state_values[row, max(column-1,0)] + p_mistake*state_values[min(row + 1,rows), column] + p_mistake*state_values[max(row - 1,0), column]
-		action_value = expected_reward + gamma * next_state_value
-		return action_value
-
-	elif action == 'R':
-		expected_reward = p_action*reward[row, min(column+1, columns)] + p_mistake*reward[min(row + 1,rows), column] + p_mistake*reward[max(row - 1,0), column] 
-		next_state_value = p_action*state_values[row, min(column+1, columns)] + p_mistake*state_values[min(row + 1,rows), column] + p_mistake*state_values[max(row - 1,0), column]
-		action_value = expected_reward + gamma * next_state_value
-		return action_value
+To - Do
+--------
+- command line call
+- add grid output instead of matrix
+- ouput action and reward grid too
+- complete summary and learnings
 
 
 """
@@ -128,7 +76,7 @@ while delta > theta:
 				delta = max(delta, diff)
 
 print(state_values)
-		#print(action_values)
+
 
 
 

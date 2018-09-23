@@ -1,13 +1,16 @@
 """
+Topic -- Testing Cart-Pole environment using the OpenAI gym
+github -- https://github.com/kvfrans/openai-cartpole
+
+
 Summary
 -------
-Test on CartPole enviroment using two methods : random and hillclimb
+Testing the CartPole enviroment using two methods : random and hillclimb
 
-
-
-Link -
-Learnings - 
-
+To - Do
+--------
+- comment code
+- complete summary and learnings
 """
 
 import numpy as np 
