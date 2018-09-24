@@ -1,7 +1,7 @@
 """
 Topic -- Grid World simulation using RL
 Video -- https://www.youtube.com/watch?v=aAkFtRxeP7c
-github -- https://github.com/colinskow/move37/tree/master/dynamic_programming
+Source_github -- https://github.com/colinskow/move37/tree/master/dynamic_programming
 
 Summary
 -------
