@@ -1,7 +1,7 @@
 """
 Topic -- Testing Cart-Pole environment using the OpenAI gym
 Source_github -- https://github.com/kvfrans/openai-cartpole
-
+Gym environment -- https://gym.openai.com/envs/CartPole-v1/
 
 Summary
 -------
@@ -47,7 +47,7 @@ def main(mode, episodes_per_update):
 			for _ in range(episodes_per_update):  
 				run = run_episode(env,param)
 				reward += run
-			reward = reward/10
+			reward = reward/episodes_per_update
 			
 			if reward > best_reward:
 				best_param = param
@@ -61,14 +61,14 @@ def main(mode, episodes_per_update):
 		best_reward = 0
 		param = (np.random.rand(4)*2 - 1)*noise_scaling
 		
-		for i in range(10000):
+		for i in range(1000):
 			param = param + (np.random.rand(4)*2 - 1)*noise_scaling
 			reward = 0  
 			
 			for _ in range(episodes_per_update):  
 				run = run_episode(env,param)
 				reward += run
-			reward = reward/10
+			reward = reward/episodes_per_update
 			
 			if reward > best_reward:
 				best_param = param
