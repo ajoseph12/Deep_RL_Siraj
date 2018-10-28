@@ -11,6 +11,8 @@ To - Do
 --------
 - comment code
 - complete summary and learnings
+
+
 """
 
 import numpy as np 

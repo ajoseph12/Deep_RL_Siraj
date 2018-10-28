@@ -9,15 +9,12 @@ In this programming exercie we are going to help 'Roomba' get across the grid
 keeping in mind the rewards - maximum reward - and time - minimum time. Following
 would be the methods employed to perform the same:
 - Brute Force
-- 
+- Value Iteration
 
 
 To - Do
 --------
-- Define environment
-- Define many policies 
-- Each policy ought to be tested for 'e' episodes to get avg success
-- 
+- Value iterations
 
 MSC information 
 ---------------
@@ -33,16 +30,13 @@ given position on the grid.
 
 
 
-
-
-
-
-	main()
 """
 import numpy as np 
 import gym
 import random
 import time
+
+
 
 class roomba_brute(object):
 
@@ -54,6 +48,7 @@ class roomba_brute(object):
 		self.policies = [list(self._random_policy()) for i in range(num_of_policies)]
 		self.avg_rewards = list()
 	
+
 	@property
 	def brute(self):
 
@@ -88,14 +83,84 @@ class roomba_brute(object):
 
 
 
+class roomba_value_iter(object):
+
+
+	def __init__(self, environment, theta, gamma):
+
+		self.env = gym.make(environment)
+		self.theta = theta
+		self.state_value = np.zeros((grid_h,grid_w))
+		self.gamma = gamma
+		#self.optimalvalue = self._value_iteration()
+
+
+	@property
+	def value_iteration(self):
+
+		delta = 1000
+		check = 0
+		value = np.zeros(self.env.env.nS)
+
+		while  self.theta < delta:
+
+			delta = 0
+			prev_value = np.copy(value)
+
+			for s in range(self.env.env.nS):
+				
+				q_sa = [sum([p*(r + prev_value[s_]) for p, s_, r, _ in 
+					self.env.env.P[s][a]] for a in range(env.env.nA))]
+				value[s] = max(q_sa)
+				delta = max(delta, value[s])
+
+		return value
+
+
+	@staticmethod
+	def calculate_policy(value):
+
+		policy = np.zeros(self.env)
+
+
+			
+			
+
+
+		for i in range(episodes):
+			start = self.environment.reset()
+
+
+
+
+
+
+
+	def _bellman_optimality_equation(self,)
+
+
+
 
 
 def main():
 
+	
+	startTime = time.time()
 	r = roomba_brute(environment, action_list, num_of_policies)
 	max_reward, best_policy = r.brute
-	print(max_reward, best_policy)
+	endTime = time.time()
+	total_time = endTime - startTime
+	print("----------------- Brute Force Method ---------------------")
+	print("Best score is %0.2f and time take is %4.2fs" %(max_reward,total_time))
+	print("Best policy is : " + str(best_policy) + '\n')
+
 	
+	startTime = time.time()
+	r_vi = roomba_value_iter(environment, theta, grid_h, grid_w, gamma)
+	optimalvalue = r_vi.value_iteration
+	policy = r_vi.
+
+
 
 
 
