@@ -97,11 +97,10 @@ class roomba_value_iter(roomba_brute):
 
 		self.env = gym.make(environment)
 		self.theta = theta
-		#self.state_value = np.zeros((grid_h,grid_w))
 		self.gamma = gamma
 		self.optimal_value = self._value_iteration()
 		self.optimal_policy = self._calculate_policy()
-		#self.policy_score = self._evaluate_policy()
+
 
 	
 	def _value_iteration(self, check = 100000):
@@ -144,27 +143,6 @@ class roomba_value_iter(roomba_brute):
 			policy[s] = np.argmax(action_values)
 
 		return policy
-
-
-	def _evaluate_policy(self, episodes = 100, iterations = 1000):
-
-		total_reward = 0
-		for episode in range(episodes):
-			start = self.env.reset()
-
-			for state in range(iterations):
-
-				action = self.policy[start]
-				start, reward, done = self.env.step(action)
-				total_reward += reward
-
-				if done: break
-
-		return total_reward/iterations
-
-
-
-
 
 
 
