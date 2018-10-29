@@ -28,6 +28,13 @@ Actions:
 Policy : a list of length 16 indicating the action to be taken when on a 
 given position on the grid.
 
+Learnings
+---------
+- The value iteration algo keeps improving the state values at each 
+iteration, until it converges. An explicit policy isn't built at every
+step we are simply working value space. Whereas in policy iteration,
+at every step we create a value function which is was the value function 
+for a particular policy. So policy iteration should be the way to go.
 
 
 """
@@ -163,6 +170,16 @@ class roomba_value_iter(roomba_brute):
 
 
 def main():
+
+	startTime = time.time()
+	r = roomba_brute(environment, action_list, num_of_policies)
+	max_reward, best_policy = r.brute
+	endTime = time.time()
+	total_time = endTime - startTime
+	print("----------------- Brute Force Method ---------------------")
+	print("Best score is %0.2f and time take is %4.2fs" %(max_reward,total_time))
+	print("Best policy is : " + str(best_policy) + '\n')
+
 	
 	startTime = time.time()
 	r_vi = roomba_value_iter(environment, theta, gamma)
@@ -171,14 +188,11 @@ def main():
 	policy_score = r_vi._iterations(optimal_policy)
 	endTime = time.time()
 	total_time = endTime - startTime
-
 	print("----------------- Value Iteration Method ---------------------")
 	print("Policy score is %0.2f and time take is %4.2fs" %(policy_score,total_time))
 	print("The optimal policy is : " + str(optimal_policy) + '\n')
 
 
-	#total_time = endTime - startTime
-	#policy = r_vi.
 
 
 
@@ -197,73 +211,4 @@ if __name__ == '__main__':
 	theta = 0.00001
 	gamma = 1
 	main()
-
-"""
-
-env = gym.make('FrozenLake-v0')
-policy = np.random.choice([0,1,2,3], size = 16)
-print(policy)
-total_reward = 0
-for e in range(10000):
-
-	obs = env.reset()
-	
-	for p in policy:
-		action = p
-		obs, reward, done, info = env.step(action)
-
-		if done: break
-
-	total_reward += reward
-
-print(total_reward, e) 
-
-
-totalReward = 0
-
-env = gym.make('FrozenLake-v0')
-
-
-policies = [list(np.random.choice(4, size = 16)) for i in range(1000)]
-totalReward = list()
-for policy in policies:
-	
-	total_reward = 0 
-
-	for e in range(100):
-		start = env.reset()
-
-		for t in range(100):
-			#print(start)
-			action = policy[start]
-			start, reward, done, _ = env.step(action)
-			total_reward += reward
-
-			if done:break
-
-	totalReward.append(total_reward)
-		#print(totalReward, policy, t)
-
-print(max(totalReward))
-
-
-
-
-startTime = time.time()
-	r = roomba_brute(environment, action_list, num_of_policies)
-	max_reward, best_policy = r.brute
-	endTime = time.time()
-	total_time = endTime - startTime
-	print("----------------- Brute Force Method ---------------------")
-	print("Best score is %0.2f and time take is %4.2fs" %(max_reward,total_time))
-	print("Best policy is : " + str(best_policy) + '\n')
-
-"""
-
-
-
-
-
-
-
 
