@@ -10,11 +10,7 @@ keeping in mind the rewards - maximum reward - and time - minimum time. Followin
 would be the methods employed to perform the same:
 - Brute Force
 - Value Iteration
-
-
-To - Do
---------
-- Value iterations
+- Policy Iterations
 
 MSC information 
 ---------------
@@ -36,6 +32,10 @@ step we are simply working value space. Whereas in policy iteration,
 at every step we create a value function which is was the value function 
 for a particular policy. So policy iteration should be the way to go.
 
+Enigmas (or my inaneness :/)
+-------
+- I consistently keep getting better results with policy iteration than
+with value iteration. Not sure if this is supposed to be hapenning. 
 
 """
 import numpy as np 
@@ -48,9 +48,10 @@ import time
 class roomba_brute(object):
 
 
-	def __init__(self, environment, action_list, num_of_policies):
+	def __init__(self, environment, gamma, action_list, num_of_policies):
 
 		self.env = gym.make(environment)
+		self.gamma = gamma
 		self.action_list = action_list
 		self.policies = [list(self._random_policy()) for i in range(num_of_policies)]
 		self.avg_rewards = list()
@@ -70,6 +71,7 @@ class roomba_brute(object):
 	def _iterations(self, policy, episodes = 100, iterations = 100):
 
 		total_reward = 0
+		step = 0
 		for i in range(episodes):
 			start = self.env.reset()
 
@@ -77,8 +79,8 @@ class roomba_brute(object):
 
 				action = policy[start]
 				start, reward, done, info = self.env.step(action)
-				total_reward += reward
-
+				total_reward += self.gamma**step * reward
+				step += 1
 				if done: break
 				
 		return total_reward/episodes
@@ -119,9 +121,9 @@ class roomba_value_iter(roomba_brute):
 				
 				q_sa = [sum([p * (r + self.gamma*prev_value[s_]) for p, s_, r, _ in 
 					self.env.env.P[s][a]]) for a in range(self.env.env.nA)]
-				
+
 				value[s] = max(q_sa)
-				delta = max(delta, value[s])
+				delta = max(delta, abs(prev_value[s] - value[s]))
 
 			check += 1 
 			if check == 100000: break
@@ -146,11 +148,77 @@ class roomba_value_iter(roomba_brute):
 
 
 
+class roomba_policy_iter(roomba_value_iter):
+
+	
+	def __init__(self, environment, theta, gamma):
+
+		self.env = gym.make(environment)
+		self.theta = theta
+		self.gamma = gamma
+		self.optimal_value = np.zeros(self.env.env.nS)
+		self.optimal_policy = np.random.choice(self.env.env.nA, size = self.env.env.nS)
+	
+
+	def _policy_evaluaiton(self):
+
+		delta = 100
+
+		while self.theta < delta:
+			delta = 0
+			prev_value = self.optimal_value
+
+			for s in range(self.env.env.nS):
+
+				policy_a = self.optimal_policy[s]
+				q_sa = sum([p * (r + self.gamma*prev_value[s_]) for p, s_, r, _ in 
+					self.env.env.P[s][policy_a]])
+				
+				self.optimal_value[s] = q_sa
+				delta = max(delta, abs(prev_value[s] - self.optimal_value[s]))
+
+
+	def _policy_improvement(self):
+
+		self._policy_evaluaiton()
+		new_policy = self._calculate_policy()
+		return new_policy
+
+
+	@property
+	def policy_iteration(self, max_iterations = 1000):
+
+		policy_stable = False
+		iters = 0
+
+		while not policy_stable:
+
+			old_policy = self.optimal_policy
+			self.optimal_policy = self._policy_improvement()
+			policy_stable =  self._policy_chk(old_policy, self.optimal_policy)
+			if iters == max_iterations: break
+			iters += 1
+		
+		print("Converged after {} iterations".format(iters))
+		return self.optimal_policy, self.optimal_value
+
+
+	def _policy_chk(self, old_policy, new_policy):
+
+		for i in range(old_policy.shape[0]):
+			
+			if old_policy[i] == new_policy[i]: continue
+			else: return False
+
+		return True
+
+
 
 def main():
 
+	
 	startTime = time.time()
-	r = roomba_brute(environment, action_list, num_of_policies)
+	r = roomba_brute(environment, gamma, action_list, num_of_policies)
 	max_reward, best_policy = r.brute
 	endTime = time.time()
 	total_time = endTime - startTime
@@ -170,11 +238,17 @@ def main():
 	print("Policy score is %0.2f and time take is %4.2fs" %(policy_score,total_time))
 	print("The optimal policy is : " + str(optimal_policy) + '\n')
 
+	
+	startTime = time.time()
+	r_pi = roomba_policy_iter(environment, theta, gamma)
+	optimal_policy, optimal_value = r_pi.policy_iteration
+	policy_score = r_pi._iterations(optimal_policy)
+	endTime = time.time()
+	total_time = endTime - startTime
+	print("----------------- Policy Iteration Method ---------------------")
+	print("Policy score is %0.2f and time take is %4.2fs" %(policy_score,total_time))
+	print("The optimal policy is : " + str(optimal_policy) + '\n')
 
-
-
-
-                               
 
 if __name__ == '__main__':
 
@@ -183,10 +257,7 @@ if __name__ == '__main__':
 	no_of_actions = 4
 	action_list = [i for i in range(no_of_actions)]
 	num_of_policies = 1000
-
-
-	## Value Iteration
-	theta = 0.00001
+	theta = 0.00000000001
 	gamma = 1
 	main()
 
